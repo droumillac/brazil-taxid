@@ -1,4 +1,4 @@
-# Brazil TaxID (CPF & CNPJ Validator/API Consultant)
+# droumillac/brazil-taxid (CPF & CNPJ Validator/API Consultant)
 
 Uma biblioteca PHP robusta focada em ecossistemas modernos do Brasil. Além de realizar a **validação híbrida matemática de CNPJs** (incluindo o novo padrão alfanumérico estipulado para Julho/2026), possui uma inteligência de **fallback (contingência)** nativa para realizar consultas cadastrais em diferentes APIs públicas, garantindo alta disponibilidade e a entrega de um JSON padronizado.
 
@@ -22,7 +22,7 @@ Uma biblioteca PHP robusta focada em ecossistemas modernos do Brasil. Além de r
 Como o pacote usa PSR-4 e GuzzleHttp para as requisições, você pode integrá-lo ao seu ambiente adicionando através do composer:
 
 ```bash
-composer require seu-usuario/brazil-taxid
+composer require droumillac/brazil-taxid
 ```
 
 ## 🛠️ Como Utilizar
