@@ -1,0 +1,20 @@
+{
+    "name": "seu-usuario/brazil-taxid",
+    "description": "Biblioteca para validação de CPF/CNPJ (com suporte a matriz alfanumérica) e consulta em provedores com sistema de fallback",
+    "type": "library",
+    "require": {
+        "php": ">=8.1",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "BrazilTaxId\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Developer"
+        }
+    ],
+    "minimum-stability": "stable"
+}
