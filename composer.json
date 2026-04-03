@@ -1,5 +1,5 @@
 {
-    "name": "seu-usuario/brazil-taxid",
+    "name": "droumillac/brazil-taxid",
     "description": "Biblioteca para validação de CPF/CNPJ (com suporte a matriz alfanumérica) e consulta em provedores com sistema de fallback",
     "type": "library",
     "require": {
