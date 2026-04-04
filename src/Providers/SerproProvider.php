@@ -22,13 +22,13 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
     public function __construct(
         string $consumerKeyOrToken,
         ?string $consumerSecret = null,
-        Client $client = null, 
-        string $cnpjBaseUrl = 'https://gateway.apiserpro.serpro.gov.br/consulta-cnpj-df-v2/ni/',
-        string $cpfBaseUrl = 'https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df-v2/cpf/',
+        Client $client = null,
+        string $cnpjBaseUrl = 'https://gateway.apiserpro.serpro.gov.br/consulta-cnpj-df/v2/empresa/',
+        string $cpfBaseUrl = 'https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df/v2/cpf/',
         string $authUrl = 'https://gateway.apiserpro.serpro.gov.br/token'
     ) {
         $this->client = $client ?? new Client(['timeout' => 5.0]);
-        
+
         // Se omitirmos a secret, a biblioteca assume que o usuário
         // está colando diretamente o Bearer Token fixo
         if (is_null($consumerSecret)) {
@@ -40,7 +40,7 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
             $this->consumerSecret = $consumerSecret;
             $this->bearerToken = null;
         }
-        
+
         $this->cnpjBaseUrl = rtrim($cnpjBaseUrl, '/') . '/';
         $this->cpfBaseUrl = rtrim($cpfBaseUrl, '/') . '/';
         $this->authUrl = $authUrl;
@@ -79,7 +79,7 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
                 $content = file_get_contents($cacheFile);
                 $content = str_replace("<?php die('Access Denied'); ?>\n", "", $content);
                 $data = json_decode(trim($content), true);
-                
+
                 if ($data && isset($data['access_token']) && isset($data['expires_at'])) {
                     // Limite de segurança de 60 segundos p/ não disparar request com ele explodindo no voo
                     if (time() < ($data['expires_at'] - 60)) {
@@ -107,13 +107,13 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
             if (isset($data['access_token'])) {
                 $this->bearerToken = $data['access_token'];
                 // Tempo padrão de sobrevida de tokens: geralmente 3600 (1 hora)
-                $expiresIn = (int)($data['expires_in'] ?? 3600);
-                
+                $expiresIn = (int) ($data['expires_in'] ?? 3600);
+
                 $cacheData = [
                     'access_token' => $this->bearerToken,
                     'expires_at' => time() + $expiresIn
                 ];
-                
+
                 $fileContent = "<?php die('Access Denied'); ?>\n" . json_encode($cacheData);
                 file_put_contents($this->getCacheFilePath(), $fileContent);
 
@@ -161,7 +161,7 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
             $company->municipioJurisdicao = $data['municipioJurisdicao'] ?? null;
             $company->telefones = $data['telefones'] ?? null;
             $company->correioEletronico = $data['correioEletronico'] ?? null;
-            $company->capitalSocial = isset($data['capitalSocial']) ? (float)$data['capitalSocial'] : null;
+            $company->capitalSocial = isset($data['capitalSocial']) ? (float) $data['capitalSocial'] : null;
             $company->porte = $data['porte'] ?? null;
             $company->situacaoEspecial = $data['situacaoEspecial'] ?? null;
             $company->dataSituacaoEspecial = $data['dataSituacaoEspecial'] ?? null;
@@ -212,9 +212,9 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
 
             return $person;
         } catch (ClientException $e) {
-             if ($e->getResponse()->getStatusCode() === 401 && !$isRetry && $this->consumerKey) {
+            if ($e->getResponse()->getStatusCode() === 401 && !$isRetry && $this->consumerKey) {
                 // Token expirou ou corrompeu, força renovação do cache
-                $this->getAccessToken(true); 
+                $this->getAccessToken(true);
                 return $this->consultCpf($cpf, true);
             }
             return null;
