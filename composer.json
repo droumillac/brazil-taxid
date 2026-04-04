@@ -2,6 +2,7 @@
     "name": "droumillac/brazil-taxid",
     "description": "Biblioteca para validação de CPF/CNPJ (com suporte a matriz alfanumérica) e consulta em provedores com sistema de fallback",
     "type": "library",
+    "license": "MIT",
     "require": {
         "php": ">=8.1",
         "guzzlehttp/guzzle": "^7.8"
