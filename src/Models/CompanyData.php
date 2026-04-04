@@ -4,32 +4,48 @@ namespace BrazilTaxId\Models;
 
 class CompanyData
 {
-    public ?string $cnpj_raiz = null;
-    public ?string $razao_social = null;
-    public ?string $capital_social = null;
-    public ?string $responsavel_federativo = null;
-    public ?string $atualizado_em = null;
-    public ?array $porte = null;
-    public ?array $natureza_juridica = null;
-    public ?array $qualificacao_do_responsavel = null;
-    public array $socios = [];
-    public ?array $simples = null;
-    public ?array $estabelecimento = null;
+    public ?string $ni = null;
+    public ?string $tipoEstabelecimento = null;
+    public ?string $nomeEmpresarial = null;
+    public ?string $nomeFantasia = null;
+    public ?array $situacaoCadastral = null;
+    public ?array $naturezaJuridica = null;
+    public ?string $dataAbertura = null;
+    public ?array $cnaePrincipal = null;
+    public ?array $cnaeSecundarias = null;
+    public ?array $endereco = null;
+    public ?array $municipioJurisdicao = null;
+    public ?array $telefones = null;
+    public ?string $correioEletronico = null;
+    public ?float $capitalSocial = null;
+    public ?string $porte = null;
+    public ?string $situacaoEspecial = null;
+    public ?string $dataSituacaoEspecial = null;
+    public ?array $informacoesAdicionais = null;
+    public ?array $socios = null;
 
     public function toArray(): array
     {
         return [
-            'cnpj_raiz' => $this->cnpj_raiz,
-            'razao_social' => $this->razao_social,
-            'capital_social' => $this->capital_social,
-            'responsavel_federativo' => $this->responsavel_federativo,
-            'atualizado_em' => $this->atualizado_em,
+            'ni' => $this->ni,
+            'tipoEstabelecimento' => $this->tipoEstabelecimento,
+            'nomeEmpresarial' => $this->nomeEmpresarial,
+            'nomeFantasia' => $this->nomeFantasia,
+            'situacaoCadastral' => $this->situacaoCadastral,
+            'naturezaJuridica' => $this->naturezaJuridica,
+            'dataAbertura' => $this->dataAbertura,
+            'cnaePrincipal' => $this->cnaePrincipal,
+            'cnaeSecundarias' => $this->cnaeSecundarias,
+            'endereco' => $this->endereco,
+            'municipioJurisdicao' => $this->municipioJurisdicao,
+            'telefones' => $this->telefones,
+            'correioEletronico' => $this->correioEletronico,
+            'capitalSocial' => $this->capitalSocial,
             'porte' => $this->porte,
-            'natureza_juridica' => $this->natureza_juridica,
-            'qualificacao_do_responsavel' => $this->qualificacao_do_responsavel,
-            'socios' => $this->socios,
-            'simples' => $this->simples,
-            'estabelecimento' => $this->estabelecimento,
+            'situacaoEspecial' => $this->situacaoEspecial,
+            'dataSituacaoEspecial' => $this->dataSituacaoEspecial,
+            'informacoesAdicionais' => $this->informacoesAdicionais,
+            'socios' => $this->socios
         ];
     }
 }

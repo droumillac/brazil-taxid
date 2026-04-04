@@ -42,33 +42,88 @@ class ReceitaWsProvider implements TaxIdProviderInterface
             }
 
             $company = new CompanyData();
-            $company->cnpj_raiz = substr(preg_replace('/\D/', '', $data['cnpj'] ?? ''), 0, 8);
-            $company->razao_social = $data['nome'] ?? null;
-            $company->capital_social = isset($data['capital_social']) ? (string)$data['capital_social'] : null;
-            $company->natureza_juridica = isset($data['natureza_juridica']) ? ['descricao' => $data['natureza_juridica']] : null;
-            $company->porte = isset($data['porte']) ? ['descricao' => $data['porte']] : null;
+            $company->ni = preg_replace('/\D/', '', $data['cnpj'] ?? '');
+            $company->tipoEstabelecimento = ($data['tipo'] ?? '') === 'MATRIZ' ? '1' : '2';
+            $company->nomeEmpresarial = $data['nome'] ?? null;
+            $company->nomeFantasia = $data['fantasia'] ?? null;
+            $company->situacaoCadastral = [
+                'codigo' => null,
+                'data' => $data['data_situacao'] ?? null,
+                'motivo' => $data['motivo_situacao'] ?? null
+            ];
+            $company->naturezaJuridica = [
+                'codigo' => null,
+                'descricao' => $data['natureza_juridica'] ?? null
+            ];
+            $company->dataAbertura = $data['abertura'] ?? null;
             
-            if (!empty($data['qsa'])) {
-                foreach($data['qsa'] as $socio) {
-                    $company->socios[] = [
-                        'nome' => $socio['nome'] ?? null,
-                        'qualificacao_socio' => ['descricao' => $socio['qual'] ?? null]
+            $company->cnaePrincipal = [];
+            $cnaesSecundarias = [];
+            if (!empty($data['atividade_principal'][0])) {
+                $company->cnaePrincipal = [
+                    'codigo' => preg_replace('/\D/', '', $data['atividade_principal'][0]['code'] ?? ''),
+                    'descricao' => $data['atividade_principal'][0]['text'] ?? null
+                ];
+            }
+            if (!empty($data['atividades_secundarias'])) {
+                foreach ($data['atividades_secundarias'] as $sec) {
+                    $cnaesSecundarias[] = [
+                        'codigo' => preg_replace('/\D/', '', $sec['code'] ?? ''),
+                        'descricao' => $sec['text'] ?? null
                     ];
                 }
             }
+            $company->cnaeSecundarias = $cnaesSecundarias;
 
-            $company->estabelecimento = [
-                'cnpj' => preg_replace('/\D/', '', $data['cnpj'] ?? ''),
-                'nome_fantasia' => $data['fantasia'] ?? null,
-                'situacao_cadastral' => $data['situacao'] ?? null,
+            $company->endereco = [
+                'tipoLogradouro' => null,
                 'logradouro' => $data['logradouro'] ?? null,
                 'numero' => $data['numero'] ?? null,
                 'complemento' => $data['complemento'] ?? null,
-                'bairro' => $data['bairro'] ?? null,
                 'cep' => preg_replace('/\D/', '', $data['cep'] ?? ''),
-                'cidade' => ['nome' => $data['municipio'] ?? null],
-                'estado' => ['sigla' => $data['uf'] ?? null]
+                'bairro' => $data['bairro'] ?? null,
+                'municipio' => [
+                    'codigo' => null,
+                    'descricao' => $data['municipio'] ?? null
+                ],
+                'uf' => $data['uf'] ?? null,
+                'pais' => null
             ];
+
+            $telefones = [];
+            if (!empty($data['telefone'])) {
+                $tels = explode(',', $data['telefone']);
+                foreach($tels as $tel) {
+                    $telVal = trim(preg_replace('/\D/', '', $tel));
+                    if(strlen($telVal) >= 10) {
+                        $telefones[] = ['ddd' => substr($telVal, 0, 2), 'numero' => substr($telVal, 2)];
+                    }
+                }
+            }
+            $company->telefones = $telefones;
+            $company->correioEletronico = $data['email'] ?? null;
+            $company->capitalSocial = isset($data['capital_social']) ? (float)$data['capital_social'] : null;
+            $company->porte = $data['porte'] ?? null;
+
+            $socios = [];
+            if (!empty($data['qsa'])) {
+                foreach($data['qsa'] as $socio) {
+                    $socios[] = [
+                        'tipoSocio' => null,
+                        'cpf' => null,
+                        'nome' => $socio['nome'] ?? null,
+                        'qualificacao' => $socio['qual'] ?? null,
+                        'dataInclusao' => null,
+                        'pais' => null,
+                        'representanteLegal' => [
+                            'cpf' => null,
+                            'nome' => $socio['nome_rep_legal'] ?? null,
+                            'qualificacao' => $socio['qual_rep_legal'] ?? null
+                        ]
+                    ];
+                }
+            }
+            $company->socios = $socios;
 
             return $company;
         } catch (\Throwable $e) {
