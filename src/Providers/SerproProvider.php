@@ -48,7 +48,7 @@ class SerproProvider implements TaxIdProviderInterface, CpfProviderInterface
 
     public function getName(): string
     {
-        return 'Serpro (Gestão Oficial)';
+        return 'Serpro';
     }
 
     private function getCacheFilePath(): string

@@ -86,7 +86,7 @@ class DocumentConsultant
                 if ($result && !empty($result->ni)) {
                     return [
                         'success' => true,
-                        'message' => 'Consulta realizada com sucesso via ' . $provider->getName(),
+                        'message' => $provider->getName(),
                         'data' => $result->toArray()
                     ];
                 }
@@ -127,7 +127,7 @@ class DocumentConsultant
                 if ($result && !empty($result->ni)) {
                     return [
                         'success' => true,
-                        'message' => 'Consulta realizada com sucesso via ' . $provider->getName(),
+                        'message' => $provider->getName(),
                         'data' => $result->toArray()
                     ];
                 }
